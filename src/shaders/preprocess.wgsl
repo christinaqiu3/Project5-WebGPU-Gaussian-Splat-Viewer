@@ -157,7 +157,7 @@ fn preprocess(@builtin(global_invocation_id) gid: vec3<u32>, @builtin(num_workgr
     let a = unpack2x16float(gaussian.pos_opacity[0]);
     let b = unpack2x16float(gaussian.pos_opacity[1]);
     let pos = vec4<f32>(a.x, a.y, b.x, 1.);
-    let opacity = a.y;
+    let opacity = b.y;
 
     // clip position
     let clip_pos = camera.proj * camera.view * pos;
@@ -174,9 +174,9 @@ fn preprocess(@builtin(global_invocation_id) gid: vec3<u32>, @builtin(num_workgr
     let rot_b = unpack2x16float(gaussian.rot[1]);
     let rot = vec4<f32>(rot_a.x, rot_a.y, rot_b.x, rot_b.y);
     let rotMat = mat3x3<f32>(
-        vec3<f32>(1.0 - 2.0 * (rot.z * rot.z + rot.w * rot.w), 2.0 * (rot.x * rot.y - rot.w * rot.z), 2.0 * (rot.x * rot.z + rot.y * rot.w)),
-        vec3<f32>(2.0 * (rot.x * rot.y + rot.w * rot.z), 1.0 - 2.0 * (rot.x * rot.x + rot.w * rot.w), 2.0 * (rot.y * rot.z - rot.x * rot.w)),
-        vec3<f32>(2.0 * (rot.x * rot.z - rot.y * rot.w), 2.0 * (rot.y * rot.z + rot.x * rot.w), 1.0 - 2.0 * (rot.x * rot.x + rot.y * rot.y))
+        vec3<f32>(1.0 - 2.0 * (rot.z * rot.z + rot.w * rot.w), 2.0 * (rot.y * rot.z - rot.x * rot.w), 2.0 * (rot.y * rot.w + rot.x * rot.z)),
+        vec3<f32>(2.0 * (rot.y * rot.z + rot.x * rot.w), 1.0 - 2.0 * (rot.y * rot.y + rot.w * rot.w), 2.0 * (rot.w * rot.z - rot.x * rot.y)),
+        vec3<f32>(2.0 * (rot.y * rot.w - rot.x * rot.z), 2.0 * (rot.z * rot.w + rot.x * rot.y), 1.0 - 2.0 * (rot.y * rot.y + rot.z * rot.z))
     );
 
     let scale_a = unpack2x16float(gaussian.scale[0]);

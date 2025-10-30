@@ -50,12 +50,12 @@ fn vs_main(
 // array of 6 vec2s using x y w h
 // does the order matter?
     let quad = array<vec2<f32>,6>(
+        vec2<f32>(x - w, y + h),
         vec2<f32>(x - w, y - h),
         vec2<f32>(x + w, y - h),
-        vec2<f32>(x - w, y + h),
-        vec2<f32>(x - w, y + h),
         vec2<f32>(x + w, y - h),
-        vec2<f32>(x + w, y + h)
+        vec2<f32>(x + w, y + h),
+        vec2<f32>(x - w, y + h)
     );
 
 // vertex positions using local_vertex_index
