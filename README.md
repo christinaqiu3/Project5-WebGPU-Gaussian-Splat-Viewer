@@ -16,7 +16,7 @@ This project implements a GPU-driven 3D Gaussian splatting renderer using WebGPU
 
 ### Demo Video/GIF
 
-[![](img/hw_5_1.gif)](TODO)
+[![](images/hw_5_1.gif)](TODO)
 
 ## Performance Analysis
 
