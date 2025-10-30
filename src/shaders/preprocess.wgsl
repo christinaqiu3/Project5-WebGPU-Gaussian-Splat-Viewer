@@ -166,7 +166,7 @@ fn preprocess(@builtin(global_invocation_id) gid: vec3<u32>, @builtin(num_workgr
     
     let view_depth = (camera.view * pos).z;
     // frustum culling
-    if (ndc_pos.x < -1.2 || ndc_pos.x > 1.2 || ndc_pos.y < -1.2 || ndc_pos.y > 1.2 || view_depth < 0.0) {
+    if (ndc_pos.x < -1.2 || ndc_pos.x > 1.2 || ndc_pos.y < -1.2 || ndc_pos.y > 1.2 || view_depth < 0.0 || ndc_pos.z < 0.0 || ndc_pos.z > 1.2) {
         return;
     }
 
@@ -205,10 +205,19 @@ fn preprocess(@builtin(global_invocation_id) gid: vec3<u32>, @builtin(num_workgr
     let temp = (camera.view * pos).xyz; 
     var t = temp;
 
-    let maxTx = max(.65f * camera.viewport.x / camera.focal.x, temp.x/temp.z);
+// .65 is a safe fraction of the visible field of view
+  let maxTx = max(.65f * camera.viewport.x / camera.focal.x, temp.x/temp.z);
     let maxTy = max(.65f * camera.viewport.y / camera.focal.y, temp.y/temp.z);
     t.x = min(.65f * camera.viewport.x / camera.focal.x, maxTx) * temp.z;
     t.y = min(.65f * camera.viewport.y / camera.focal.y, maxTy) * temp.z;
+
+//     let limx = 0.65 * camera.viewport.x / camera.focal.x;
+// let limy = 0.65 * camera.viewport.y / camera.focal.y;
+// let tx_over_z = temp.x / temp.z;
+// let ty_over_z = temp.y / temp.z;
+// t.x = min(limx, max(-limx, tx_over_z)) * temp.z;
+// t.y = min(limy, max(-limy, ty_over_z)) * temp.z;
+
 
     let jMat = mat3x3f(
         camera.focal.x/t.z, 0.f, -(camera.focal.x * t.x) / (t.z * t.z),
@@ -233,10 +242,10 @@ fn preprocess(@builtin(global_invocation_id) gid: vec3<u32>, @builtin(num_workgr
         
     );
 
-    var covMat2D = transpose(tMat) * transpose(vMat) * tMat;
+    var covMat2D = transpose(tMat) * vMat * tMat;
     covMat2D[0][0] += .3f;
     covMat2D[1][1] += .3f;
-    // why add?
+    // add so dont divide by 0
 
     let covariance2D = vec3f(covMat2D[0][0], covMat2D[0][1], covMat2D[1][1]);
 
