@@ -8,25 +8,35 @@
 
 ## Overview
 
-A brief description of your project and the specific features you implemented
-At least one screenshot of your project running
-A 30+ second video/gif of your project running showing all features (even though your demo can be seen online, it may not run on all computers, while a video will work everywhere)
+This project implements a GPU-driven 3D Gaussian splatting renderer using WebGPU. The goal is to take a set of 3D Gaussians and render high-quality, order-independent, depth-sorted 2D splats (quads) on the screen. The implementation follows the assignment stages: loading scene and camera data, preprocessing Gaussians on the GPU (culling, covariance → 2D conic projection, color evaluation), sorting by depth, and rendering the resulting splats with an indirect draw call.
 
 ### Live Demo
 
-[![](img/thumb.png)](http://TODO.github.io/Project4-WebGPU-Forward-Plus-and-Clustered-Deferred)
+[![](<Screenshot 2025-10-29 235258.png>)](https://christinaqiu3.com/Project5-WebGPU-Gaussian-Splat-Viewer/)
 
 ### Demo Video/GIF
 
-[![](img/video.mp4)](TODO)
+[![](img/hw_5_1.gif)](TODO)
 
-### (TODO: Your README)
+## Performance Analysis
 
-*DO NOT* leave the README to the last minute! It is a crucial part of the
-project, and we will not be able to grade you without a good README.
+### Comparing point-cloud and gaussian renderer
 
-This assignment has a considerable amount of performance analysis compared
-to implementation work. Complete the implementation early to leave time!
+The point-cloud renderer displays each point as a simple dot or quad with uniform size and color, producing a sparse and noisy appearance without smooth transitions. It lacks depth-dependent opacity, shading, or blending between nearby points.
+
+The Gaussian renderer, produces smooth, continuous surfaces because each point is rendered as an anisotropic 2D Gaussian ellipse instead of a fixed-size point. The splats blend together, giving a more realistic and soft appearance, especially around regions with dense point samples. 
+
+### Workgroup size affecting performance
+
+insert graphs
+
+### View-frustum culling give performance improvement
+
+insert graphs
+
+### Number of guassians affects performance
+
+insert graphs
 
 ### Credits
 
